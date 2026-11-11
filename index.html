@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ระบบติดตามไฟป่าและคุณภาพอากาศ PHITSANULOK FIRE &amp; AIR</title>
+<meta name="description" content="ระบบติดตามไฟป่า จุดความร้อน และคุณภาพอากาศ PM2.5 จังหวัดพิษณุโลก">
+<meta name="application-name" content="PLK FIRE &amp; AIR">
+<meta name="apple-mobile-web-app-title" content="PLK FIRE &amp; AIR">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0e1015">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icons/apple-touch-icon-152.png">
+<link rel="apple-touch-icon" sizes="167x167" href="icons/apple-touch-icon-167.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<meta property="og:title" content="ระบบติดตามไฟป่าและคุณภาพอากาศ PHITSANULOK FIRE &amp; AIR">
+<meta property="og:description" content="ติดตามจุดความร้อน สถานะการดับไฟ และค่าฝุ่น PM2.5 จังหวัดพิษณุโลก">
+<meta property="og:image" content="icons/icon-512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<style>
+:root{--bg:#0e1015;--fg:#f4f5f7;--mute:#a7adb8;--acc:#ff8a1f}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:"IBM Plex Sans Thai",system-ui,sans-serif}
+#app{position:fixed;inset:0;width:100%;height:100%;border:0;display:block;background:#fff;opacity:0;transition:opacity .3s}
+#app.on{opacity:1}
+.splash{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;transition:opacity .35s}
+.splash.off{opacity:0;pointer-events:none}
+.splash img{width:min(38vw,180px);height:auto;border-radius:22%;box-shadow:0 10px 40px rgba(255,138,31,.25)}
+.splash h1{margin:6px 0 0;font-size:clamp(18px,4.6vw,24px);line-height:1.35}
+.splash .en{font-weight:700;letter-spacing:.06em;color:var(--acc);font-size:clamp(14px,3.6vw,17px)}
+.splash p{margin:0;color:var(--mute);font-size:14px;max-width:440px;line-height:1.6}
+.bar{width:160px;height:4px;border-radius:4px;background:#262a33;overflow:hidden}
+.bar i{display:block;width:40%;height:100%;background:var(--acc);border-radius:4px;animation:ld 1.1s ease-in-out infinite}
+@keyframes ld{0%{transform:translateX(-100%)}100%{transform:translateX(260%)}}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--acc);color:#1a1205;border:0;border-radius:999px;padding:11px 20px;font:inherit;font-weight:700;font-size:15px;text-decoration:none;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--fg);border:1px solid #3a3f4a}
+.acts{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+[hidden]{display:none!important}
+.hint{font-size:13px;color:var(--mute);border:1px dashed #3a3f4a;border-radius:12px;padding:10px 14px;max-width:460px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="splash" id="splash">
+  <img src="icons/icon-512.png" alt="ไอคอน PHITSANULOK FIRE & AIR" width="180" height="180">
+  <h1>ระบบติดตามไฟป่าและคุณภาพอากาศ</h1>
+  <div class="en">PHITSANULOK FIRE &amp; AIR</div>
+  <div class="bar" id="bar"><i></i></div>
+  <p id="msg">กำลังเปิดระบบ…</p>
+  <div class="acts" id="acts" hidden>
+    <a class="btn" id="openFull" href="#" target="_top" rel="noopener">เปิดระบบ</a>
+    <button class="btn ghost" id="retry" type="button">ลองอีกครั้ง</button>
+  </div>
+  <div class="hint" id="installHint" hidden></div>
+</div>
+<iframe id="app" title="ระบบติดตามไฟป่าและคุณภาพอากาศ PHITSANULOK FIRE & AIR" allow="fullscreen; clipboard-write; geolocation" referrerpolicy="no-referrer-when-downgrade"></iframe>
+<script>
+(function(){
+  var url=(window.APP_URL||'').trim(), f=document.getElementById('app'), sp=document.getElementById('splash'), msg=document.getElementById('msg'), acts=document.getElementById('acts'), bar=document.getElementById('bar');
+  var standalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
+  if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){})}
+  if(!/^https:\/\/script\.google\.com\/.+\/exec/.test(url)){bar.hidden=true;msg.innerHTML='ยังไม่ได้ตั้งค่าลิงก์ระบบ<br>ให้ผู้ดูแลวางลิงก์เว็บแอป (ลงท้ายด้วย /exec) ในไฟล์ <b>config.js</b>';return}
+  document.getElementById('openFull').href=url;
+  var done=false;
+  function show(){if(done)return;done=true;f.classList.add('on');sp.classList.add('off')}
+  function fail(){if(done)return;bar.hidden=true;msg.textContent='เปิดระบบในหน้านี้ไม่ได้ หรือสัญญาณอินเทอร์เน็ตช้า';acts.hidden=false}
+  f.addEventListener('load',function(){setTimeout(show,300)});
+  f.src=url;
+  setTimeout(fail,20000);
+  document.getElementById('retry').onclick=function(){location.reload()};
+  // คำแนะนำติดตั้งบนหน้าจอโฮม (แสดงเมื่อเปิดผ่านเบราว์เซอร์ ไม่ใช่จากไอคอน)
+  if(!standalone){
+    var ua=navigator.userAgent, h=document.getElementById('installHint');
+    if(/iPhone|iPad|iPod/.test(ua))h.innerHTML='เพิ่มไอคอนลงหน้าจอโฮม: กดปุ่ม <b>แชร์</b> (สี่เหลี่ยมมีลูกศรขึ้น) → <b>เพิ่มไปยังหน้าจอโฮม</b>';
+    window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();var b=document.createElement('button');b.className='btn ghost';b.textContent='ติดตั้งไอคอนบนเครื่องนี้';b.onclick=function(){e.prompt()};acts.hidden=false;acts.appendChild(b)});
+  }
+})();
+</script>
+</body>
+</html>

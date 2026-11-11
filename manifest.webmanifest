@@ -1,0 +1,19 @@
+{
+  "name": "ระบบติดตามไฟป่าและคุณภาพอากาศ PHITSANULOK FIRE & AIR",
+  "short_name": "PLK FIRE & AIR",
+  "description": "ระบบติดตามไฟป่า จุดความร้อน และคุณภาพอากาศ PM2.5 จังหวัดพิษณุโลก · กองอำนวยการป้องกันและบรรเทาสาธารณภัยจังหวัดพิษณุโลก",
+  "lang": "th",
+  "id": "./",
+  "start_url": "./?source=app",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0e1015",
+  "theme_color": "#0e1015",
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icons/maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable"},
+    {"src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
